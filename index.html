@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Trivia Game</title>
+
+</head>
+<body>
+
+  <!--  <h1>Trivia Game!
+        <span id="textHeading"></span>
+    </h1>
+    <br>
+    <div>
+    <button id="start">Start</button>
+    <br><b>Timer:</b>
+    <div id="show-timer"> </div>
+    <div id="numCorrectAnswers"> </div>
+    <div id="numWrongAnswers"> </div>
+    <div id="numAnswered"> </div>
+    <div id ="play-area">
+    </div><br>
+    <button id="done">Done!</button>
+    </div> -->
+    <h1>Trivia Game!
+        <span id="textHeading"></span>
+    </h1>
+    <table>
+        <tr>
+            <td>
+                <div id ="play-area"></div>
+            </td>
+            <td>
+                <div>
+                    <button id="start">Start</button>
+                    <br><b>Timer:</b>
+                    <div id="show-timer"> </div>
+                    <div id="numCorrectAnswers"> </div>
+                    <div id="numWrongAnswers"> </div>
+                    <div id="numAnswered"> </div><br>
+                    <button id="done">Done!</button>
+                    </div>
+            </td>
+        </tr>
+    </table>
+    
+
+
+<!-- JAVASCRIPT  -->
+<!-- ========================================= -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+var gameStarted = false;
+var questions = [
+    {
+        question: "What is 1 + 0 ? ",
+        answers: [1, 2, 3, 100],
+        correctAnswer: 1,
+    },
+    {
+        question: "What is Brzil's capital?",
+        answers: ["Sãopaulo", "Fortaleza", "Brasília", "SFO"],
+        correctAnswer: "Brasília",
+    },
+    {
+        question: "What is 26*26? = ",
+        answers: [626, 625, 656, 676],
+        correctAnswer: 676,
+    },
+    {
+        question: "Today is Firday Aug10th, 2018. Find out the same Day's Date of Previous Year?",
+        answers: ["Friday", "Saturday", "Thursday", "Wednesday"],
+        correctAnswer: "Thursday",
+    },
+    {
+        question: "Who is academy best director award winner in 2018?",
+        answers: ["Paul", "Guillermo", "Jordan", "Greta"],
+        correctAnswer: "Guillermo",
+    }
+]
+// write code to populate questions and start timer on click of start //
+
+function populateQuestions(){
+    var htmlString = "";
+    if(!gameStarted){
+            for (var i=0; i < questions.length; i++){
+            htmlString += "<br>" + questions[i].question +"<br>";
+            for (j=0;j<questions[i].answers.length; j++){
+                htmlString += "<input type=radio id=answer-"+i+j + " name=answer-"+i+"><label>"+ questions[i].answers[j] +"</label><br>";
+            }
+        } 
+        $("#play-area").append(htmlString);
+        $("#start").hide();
+        gameStarted = true;
+        run();
+    }
+}
+
+// all timer related functions here //
+    var number = 20;
+    var intervalId;
+    $("#done").on("click", stopAndShowResults);
+    $("#start").on("click", populateQuestions);
+    function run() {
+        clearInterval(intervalId);
+        intervalId = setInterval(decrement, 1000);
+        number =20;
+    }
+    function decrement() {
+        number--;
+        $("#show-timer").html("<b>" + number + "</b>");
+        // if timer reaches zero seconds, stop and showresults.
+        if (number === 0) {
+            stopAndShowResults();
+            alert("Time Up!");
+            number = 20;
+        }
+    }
+
+    // iterate through radion button selections and compare with correct answers
+    // update values of correct answers, wrong answers and total answered questions
+    function stopAndShowResults() {
+        clearInterval(intervalId);
+        var radioBtnSelected;
+        var numAnswered = 0;
+        var numCorrectAnswers=0;
+        var numWrongAnswers=0;
+        for (var i=0; i < questions.length; i++){
+        for (j=0;j<questions[i].answers.length; j++){
+                radioBtnSelected = "answer-"+i+j;
+                radioBtnSelected = "input[id="+radioBtnSelected+"]:checked";
+                selectedVal = $(radioBtnSelected).val();
+                if(selectedVal === 'on'){
+                    numAnswered++;
+                    if (questions[i].answers[j] === questions[i].correctAnswer){
+                        numCorrectAnswers++;
+                    }else if(questions[i].answers[j] != questions[i].correctAnswer){
+                        numWrongAnswers++;
+                    }
+                }
+            }   
+        } 
+        $("#numCorrectAnswers").html("<br><b> Number of correct answers =" + numCorrectAnswers + "</b>");
+        $("#numWrongAnswers").html("<br><b> Number of wrong answers =" + numWrongAnswers + "</b>");
+        $("#numAnswered").html("<br><b>Number of questions answered =" + numAnswered + "</b><br>");
+        $("#done").hide();
+   }
+
+</script>
+</body>
+</html>
